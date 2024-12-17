@@ -1,0 +1,10 @@
+parameters:
+    paths:
+        - src/
+    level: 9
+
+services:
+    - 
+        class: App\PHPStan\UnionToIntersectionTypeResolver
+        tags:
+            - phpstan.phpDoc.typeNodeResolverExtension

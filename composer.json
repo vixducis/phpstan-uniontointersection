@@ -1,0 +1,17 @@
+{
+  "name": "wouterh/phpstan_union_to_intersection",
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Wouter Henderickx",
+      "email": "wouter.henderickx@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "phpstan/phpstan": "^2.0"
+  }
+}
