@@ -4,7 +4,9 @@ namespace App\PHPStan;
 
 use PHPStan\Type\CompoundType;
 use PHPStan\Type\GeneralizePrecision;
+use PHPStan\Type\IntersectionType;
 use PHPStan\Type\LateResolvableType;
+use PHPStan\Type\UnionType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeUtils;
 use PHPStan\Type\VerbosityLevel;
@@ -20,7 +22,7 @@ implements LateResolvableType, CompoundType
 {
     use LateResolvableTypeTrait;
 
-    public function __construct(private TemplateType $type) {}
+    public function __construct(private Type $type) {}
 
     public function getReferencedClasses(): array
     {
@@ -46,10 +48,15 @@ implements LateResolvableType, CompoundType
     public function isResolvable(): bool
     {
         return false === TypeUtils::containsTemplateType($this->type);
+
     }
 
     protected function getResult(): Type
     {
+        if ($this->type instanceof UnionType) {
+            return new IntersectionType($this->type->getTypes());
+        }
+
         return $this->type;
     }
 
@@ -71,7 +78,13 @@ implements LateResolvableType, CompoundType
      */
     public function traverse(callable $cb): Type
     {
-        return $cb($this->type);
+        $type = $cb($this->type);
+
+        if ($this->type === $type) {
+            return $this;
+        }
+
+        return new self($type);
     }
 
     public function traverseSimultaneously(Type $right, callable $cb): Type

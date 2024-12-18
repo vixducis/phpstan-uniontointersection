@@ -41,18 +41,7 @@ implements TypeNodeResolverExtension, TypeNodeResolverAwareExtension
 		}
 
 		$type = $this->typeNodeResolver->resolve($arguments[0], $nameScope);
-		if ($type instanceof UnionType) {
-			return new IntersectionType($type->getTypes());
-		}
 
-        if ($type instanceof ObjectType) {
-            return $type;
-        }
-
-		if ($type instanceof TemplateType) {
-			return new UnionToIntersectionType($type);
-		}
-
-		return null;
+		return new UnionToIntersectionType($type);
 	}
 }
